@@ -1,0 +1,60 @@
+use [DVLD];
+go 
+alter authorization on database :: [DVLD] to [sa]
+go
+
+select * From People;
+select * From Countries;
+
+SELECT Countries.CountryID, People.PersonID, People.FirstName, People.SecondName, People.ThirdName, People.LastName, People.NationalityCountryID
+FROM   People INNER JOIN
+             Countries ON People.NationalityCountryID = Countries.CountryID
+
+
+SELECT Users.UserID, Users.UserName, Users.Password, People.PersonID, People.FirstName, People.SecondName, People.ThirdName, People.Phone
+FROM   People INNER JOIN
+             Users ON People.PersonID = Users.PersonID
+
+
+SELECT ApplicationTypes.ApplicationTypeTitle, ApplicationTypes.ApplicationFees, Applications.ApplicationTypeID, Applications.ApplicantPersonID, People.FirstName, People.SecondName, People.Phone, Applications.CreatedByUserID, Users.PersonID, Users.UserName, Users.Password, 
+             Applications.ApplicationID, Applications.ApplicationDate
+FROM   Applications INNER JOIN
+             ApplicationTypes 
+             ON Applications.ApplicationTypeID = ApplicationTypes.ApplicationTypeID 
+             INNER JOIN People
+             ON Applications.ApplicantPersonID = People.PersonID 
+             INNER JOIN Users 
+             ON Applications.CreatedByUserID = Users.UserID AND People.PersonID = Users.PersonID
+
+
+SELECT LocalDrivingLicenseApplications.LocalDrivingLicenseApplicationID, LocalDrivingLicenseApplications.ApplicationID, LocalDrivingLicenseApplications.LicenseClassID, LicenseClasses.ClassName, LicenseClasses.ClassDescription, Applications.ApplicantPersonID, 
+             Applications.ApplicationDate, Applications.ApplicationTypeID, Applications.PaidFees, Applications.ApplicationStatus, Applications.CreatedByUserID
+FROM   Applications INNER JOIN
+             LocalDrivingLicenseApplications 
+             ON Applications.ApplicationID = LocalDrivingLicenseApplications.ApplicationID 
+             INNER JOIN
+             LicenseClasses 
+             ON LocalDrivingLicenseApplications.LicenseClassID = LicenseClasses.LicenseClassID
+
+
+
+SELECT TestTypes.TestTypeTitle, TestTypes.TestTypeDescription, TestTypes.TestTypeFees, TestAppointments.TestAppointmentID, TestAppointments.TestTypeID, TestAppointments.LocalDrivingLicenseApplicationID, TestAppointments.AppointmentDate, TestAppointments.PaidFees, 
+             TestAppointments.CreatedByUserID, TestAppointments.IsLocked
+FROM   TestTypes INNER JOIN
+             TestAppointments ON TestTypes.TestTypeID = TestAppointments.TestTypeID
+
+
+
+SELECT Tests.TestID, Tests.TestAppointmentID, Tests.TestResult, Tests.Notes, TestAppointments.TestTypeID, TestAppointments.AppointmentDate, TestAppointments.PaidFees, TestAppointments.CreatedByUserID
+FROM   TestAppointments INNER JOIN
+             Tests ON TestAppointments.TestAppointmentID = Tests.TestAppointmentID
+
+
+SELECT Drivers.PersonID, Drivers.CreatedByUserID, Drivers.CreatedDate, Licenses.DriverID, Licenses.ApplicationID, Licenses.LicenseID, Licenses.LicenseClass, Licenses.IssueDate, Licenses.ExpirationDate, Licenses.Notes, Licenses.PaidFees, Licenses.IsActive, 
+             Licenses.IssueReason
+FROM   Licenses INNER JOIN
+             Drivers ON Licenses.DriverID = Drivers.DriverID
+
+
+
+
